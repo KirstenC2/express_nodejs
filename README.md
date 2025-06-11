@@ -45,20 +45,44 @@ express_nodejs/
 ├── README.md                   # 專案說明（中英）
 └── ... 其他檔案
 ```
-### 後端角色table
-| 架構元件             | 職責 / 功能                      | 生活化比喻          | 為什麼重要？                 |
-| ---------------- | ---------------------------- | -------------- | ---------------------- |
-| **Controller**   | 接收請求、回應結果                    | 櫃檯接待人員 / 接單人員  | 負責第一線與客戶互動             |
-| **Service**      | 處理商業邏輯、流程協調                  | 老闆 / 經理        | 決策核心，統籌所有流程            |
-| **Repository**   | 資料存取邏輯（DB 查詢/更新/刪除）          | 倉管 / 採購員       | 隱藏底層資料操作細節，便於切換資料庫     |
-| **Middleware**   | 請求前的處理（認證、日誌、CORS）           | 門口保全 / 安檢站     | 攔截每個請求，做驗證或處理          |
-| **DTO**          | 請求與回應的資料格式規範                 | 點菜單 / 訂單表格     | 確保資料結構正確、統一            |
-| **Entity/Model** | 定義資料庫中的資料結構                  | 倉庫的貨物標籤 / 建模圖紙 | 用來對應資料庫欄位與邏輯結構         |
-| **Guard**        | 保護路由、決定可不可以進入特定功能            | 門禁卡感應器 / 員工識別器 | 控制誰有權進入某些資源或功能         |
-| **Interceptor**  | 攔截 request 或 response 做轉換/統一 | 廚房總管：統一出餐樣式    | 可統一 API 回傳格式或加上統計計時等功能 |
-| **Pipe**         | 資料驗證與轉換（輸入端）                 | 點餐單格式檢查員       | 確保客人點餐格式沒錯，例如金額為數字等    |
-| **Config**       | 環境變數與設定檔                     | 餐廳的手冊 / 作業規範書  | 把敏感與環境相關設定抽出來管理        |
+| 處理順序 | 架構元件             | 職責 / 功能                       | 生活化比喻          | 為什麼重要？                            |
+| ---- | ---------------- | ----------------------------- | -------------- | --------------------------------- |
+| 1    | **Middleware**   | 請求前的處理（認證、日誌、CORS）            | 門口保全 / 安檢站     | 攔截每個請求，做預處理（身分驗證、記錄、跨域等）          |
+| 2    | **Guard**        | 保護路由，決定是否可進入該功能               | 門禁卡感應器 / 員工識別器 | 控制誰能使用哪些功能，確保安全                   |
+| 3    | **Pipe**         | 輸入資料的格式驗證與轉型                  | 點餐單格式檢查員       | 確保 Controller 收到乾淨、正確型別的資料        |
+| 4    | **Controller**   | 接收請求、分派任務、回應結果                | 櫃檯接待人員 / 接單人員  | 與使用者互動，負責將請求送給適當的處理者              |
+| 5    | **DTO**          | 規範請求與回應資料的結構                  | 點菜單 / 訂單表格     | 保證進出的資料格式一致，提高維護與開發效率             |
+| 6    | **Service**      | 處理商業邏輯，協調多模組流程                | 老闆 / 經理        | 核心決策點，串接多模組，保持邏輯集中                |
+| 7    | **Repository**   | 封裝資料存取邏輯（查詢、寫入、刪除 DB）         | 倉管 / 採購員       | 將資料操作抽象化，避免 Service 直接依賴 DB，可替換性高 |
+| 8    | **Entity/Model** | 對應資料庫結構，定義資料的型別與關聯            | 倉庫的貨物標籤 / 建模圖紙 | 對資料進行建模，與 ORM 框架整合，資料一致性依據        |
+| 9    | **Interceptor**  | 攔截 response 做格式轉換、加統計、日誌紀錄等處理 | 廚房總管 / 統一出餐樣式  | 統一 API 回傳格式、記錄執行時間，提升維護與觀測性       |
+| -    | **Config**       | 環境變數與設定檔（DB 連線、Port、秘鑰等）      | 餐廳手冊 / 作業規範書   | 管理環境差異與敏感資訊，支援多環境部署、安全集中管理        |
 
+
+### 後端角色順序建議
+
+1. **Middleware**（中間件）
+   - 請求進入應用的第一站，負責驗證、日誌、CORS 等前置處理。
+2. **Guard**（守衛）
+   - 控制權限、決定誰能進入特定路由。
+3. **Pipe**（資料驗證/轉換）
+   - 驗證與轉換請求資料格式。
+4. **Interceptor**（攔截器）
+   - 統一處理回應格式、統計、日誌等。
+5. **Controller**（控制器）
+   - 接收請求、回應結果，調用 Service 處理業務。
+6. **DTO**（資料傳輸物件）
+   - 定義請求與回應的資料結構。
+7. **Service**（服務）
+   - 處理商業邏輯、流程協調。
+8. **Repository**（資料存取層）
+   - 封裝所有資料庫操作，對 Service 提供資料服務。
+9. **Entity/Model**（資料模型）
+   - 定義資料庫結構與對應邏輯。
+10. **Config**（設定）
+    - 管理環境變數與應用設定。
+
+---
 
 ### Repository 資料存儲層
 
@@ -112,45 +136,6 @@ Middleware 是在「收到請求（Request）」到「送出回應（Response）
 你（Request）→ 安檢站（Middleware）→ 登機口（Controller）→ 出發（Response）
 ```
 
-
-
-### Repository Layer
-
-- A design layer between Controller and Model
-- Further separates operations between Controller and Model
-
-#### Analogy: Buying a House
-
-| System Component | Analogy Role         | Description                                 |
-|------------------|---------------------|---------------------------------------------|
-| Controller       | Customer Manager    | Receives customer request: "I want a house!"|
-| Service          | Real Estate Agent   | Analyzes needs: "What's your budget?"       |
-| Repository       | Land Office/Clerk   | Handles property lookup, transfer, etc.      |
-| Database         | Land Registry       | Where property data is actually stored       |
-
-##### Buying Process (System Logic)
-1. You tell the real estate front desk your needs (API request to Controller)
-2. The staff records your needs (Controller gets req.body)
-3. The agent analyzes your budget and preferences (Service handles logic)
-4. The agent asks a clerk to check the land registry (Repository queries DB)
-5. The agent recommends a house to you (returns response)
-
-#### Why use a Repository?
-You might wonder, why can't the agent (Service) just check the land registry (DB) directly?
-
-1. Violates Single Responsibility Principle
-   - Service should focus on business logic, not DB operations. Service only checks if things are reasonable.
-   - Repository doesn't handle logic; it just stores what Service gives it.
-2. Testing becomes more complex
-   - If one person does everything, testing is harder. Separation allows easier, focused testing.
-3. Easier to change data sources
-   - For example, if the service (shop owner) wants to switch from buying beans at the market (db) to buying online, without a purchasing manager (repository), the owner has to do everything. With a repository, the owner just asks for beans, and the manager handles the rest.
-
-```
-beanSource.getFreshBeans()
-```
-The owner just tells the purchasing manager to get fresh beans, and the manager handles the details.
-
 ## 快速開始
 1. 複製 `.env` 範例並設定資料庫資訊
 2. `docker-compose up` 啟動所有服務
@@ -160,65 +145,4 @@ The owner just tells the purchasing manager to get fresh beans, and the manager 
 ```sh
 npm install         # 安裝依賴
 npm start           # 啟動 Express 伺服器
-```
-
----
-
-# Express Node.js Kafka & MySQL Fullstack Example
-
-## Introduction
-This project is a Node.js application based on Express.js, integrating Kafka message queue and MySQL database, with a simple web UI for Kafka message sending and database CRUD operations.
-
-## Features
-- Kafka message producer and consumer
-- MySQL user data CRUD (create, read, delete)
-- EJS template-based web UI
-- Docker Compose for one-command startup
-
-## Project Structure
-```
-express_nodejs/
-├── compose.yaml                # Docker Compose config
-├── Dockerfile                  # App Docker build file
-├── index.js                    # Express app entry point
-├── package.json                # Node.js project descriptor
-├── .env                        # Environment variables
-├── config/
-│   └── config.js               # Centralized config (DB, etc.)
-├── controllers/
-│   ├── homeController.js       # Home controller
-│   ├── kafkaController.js      # Kafka controller
-│   └── userController.js       # User controller
-├── middleware/
-│   ├── logger.js               # log
-├── models/
-│   ├── homeModel.js            # Home model (example)
-│   └── userModel.js            # User model
-├── repositories/
-│   └── userRepository.js       # User repository
-├── routes/
-│   ├── index.js                # Main routes
-│   └── kafka.js                # Kafka routes
-├── service/
-│   ├── db.js                   # MySQL connection pool
-│   ├── initdb.js               # Auto-create tables on startup
-│   ├── kafkaConsumer.js        # Kafka consumer service
-│   └── kafkaProducer.js        # Kafka producer service
-├── views/
-│   ├── home.ejs                # Home EJS template
-│   ├── kafkaProducer.ejs       # Kafka UI EJS template
-│   └── users.ejs               # User CRUD UI EJS template
-├── README.md                   # Project README (bilingual)
-└── ... other files
-```
-
-## Quick Start
-1. Copy and edit `.env` for your DB settings
-2. Run `docker-compose up` to start all services
-3. Visit `http://localhost:8081` to use the web UI
-
-## Main Commands
-```sh
-npm install         # Install dependencies
-npm start           # Start Express server
 ```
