@@ -7,12 +7,14 @@ const kafka = new Kafka({
 
 const consumer = kafka.consumer({ groupId: 'express-group' });
 
-async function startConsumer() {
+async function startConsumer(onMessage) {
   await consumer.connect();
-  await consumer.subscribe({ topic: 'test-topic', fromBeginning: true });
+  await consumer.subscribe({ topic: 't', fromBeginning: true });
   await consumer.run({
     eachMessage: async ({ topic, partition, message }) => {
-      console.log(`Consumed message: ${message.value.toString()} from ${topic}[${partition}]`);
+      const msg = message.value.toString();
+      if (onMessage) onMessage(msg);
+      console.log(`Consumed message: ${msg} from ${topic}[${partition}]`);
     },
   });
 }

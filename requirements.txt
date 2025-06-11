@@ -1,3 +1,5 @@
 express
 ejs
 kafkajs
+mysql2
+dotenv

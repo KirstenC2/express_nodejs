@@ -18,6 +18,20 @@ services:
       - 8081:8081
     networks:
       - kafka_default
+    depends_on:
+      - mysql
+  mysql:
+    image: mysql:8
+    restart: always
+    environment:
+      MYSQL_ROOT_PASSWORD: rootpassword
+      MYSQL_DATABASE: mydb
+      MYSQL_USER: myuser
+      MYSQL_PASSWORD: mypassword
+    ports:
+      - "3306:3306"
+    networks:
+      - kafka_default
 
 networks:
   kafka_default:

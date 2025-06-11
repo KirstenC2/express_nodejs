@@ -4,7 +4,9 @@
   <title><%= title %></title>
 </head>
 <body>
-    <nav><a href="/home">Back To Home</a></nav>
+  <nav>
+    <a href="/">Home</a>
+  </nav>
   <h1>Kafka Message Sender</h1>
   <% if (status) { %>
     <p><%= status %></p>
@@ -14,5 +16,16 @@
     <input name="message" placeholder="Message" required />
     <button type="submit">Send</button>
   </form>
+  <hr />
+  <h2>Consumed Messages</h2>
+  <ul>
+    <% if (messages && messages.length) { %>
+      <% messages.forEach(function(msg) { %>
+        <li><%= msg %></li>
+      <% }) %>
+    <% } else { %>
+      <li>No messages consumed yet.</li>
+    <% } %>
+  </ul>
 </body>
 </html>

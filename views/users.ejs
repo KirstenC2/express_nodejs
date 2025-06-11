@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>User DB UI</title>
+</head>
+<body>
+  <nav>
+    <a href="/">Home</a>
+  </nav>
+  <h1>User Database CRUD</h1>
+  <form id="addUserForm" method="POST" action="/users/ui/add">
+    <input name="name" placeholder="Name" required />
+    <input name="email" placeholder="Email" required />
+    <button type="submit">Add User</button>
+  </form>
+  <hr />
+  <h2>Users</h2>
+  <ul>
+    <% if (users && users.length) { %>
+      <% users.forEach(function(user) { %>
+        <li>
+          <%= user.name %> - <%= user.email %>
+          <form style="display:inline" method="POST" action="/users/ui/delete">
+            <input type="hidden" name="id" value="<%= user.id %>" />
+            <button type="submit">Delete</button>
+          </form>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <li>No users found.</li>
+    <% } %>
+  </ul>
+</body>
+</html>

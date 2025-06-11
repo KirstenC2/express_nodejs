@@ -2,7 +2,9 @@ const express = require('express');
 const path = require('path');
 const routes = require('./routes');
 const kafkaRoutes = require('./routes/kafka');
+const kafkaController = require('./controllers/kafkaController');
 const { startConsumer } = require('./service/kafkaConsumer');
+const initdb = require('./service/initdb');
 
 const app = express();
 
@@ -15,7 +17,11 @@ app.use(express.urlencoded({ extended: false }));
 app.use('/', routes);
 app.use('/kafka', kafkaRoutes);
 
-startConsumer();
+startConsumer(async (msg) => {
+  kafkaController.addConsumedMessage(msg);
+});
+
+initdb();
 
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
