@@ -12,9 +12,17 @@ services:
     build:
       context: .
     environment:
-      NODE_ENV: production
+      NODE_ENV: development
+      PORT: 8081
     ports:
-      - 8080:8080
+      - 8081:8081
+    networks:
+      - kafka_default
+
+networks:
+  kafka_default:
+    external: true
+
 
 # The commented out section below is an example of how to define a PostgreSQL
 # database that your application can use. `depends_on` tells Docker Compose to

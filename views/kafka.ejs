@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title><%= title %></title>
+</head>
+<body>
+  <h1>Kafka Message Sender</h1>
+  <% if (status) { %>
+    <p><%= status %></p>
+  <% } %>
+  <form method="POST" action="/kafka/send">
+    <input name="topic" placeholder="Topic" required />
+    <input name="message" placeholder="Message" required />
+    <button type="submit">Send</button>
+  </form>
+</body>
+</html>

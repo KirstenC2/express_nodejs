@@ -25,7 +25,6 @@ RUN --mount=type=bind,source=package.json,target=package.json \
     --mount=type=cache,target=/root/.npm \
     npm ci --omit=dev
 
-RUN npm install -g express
 # Run the application as a non-root user.
 USER node
 
@@ -33,7 +32,7 @@ USER node
 COPY . .
 
 # Expose the port that the application listens on.
-EXPOSE 8080
+EXPOSE 8081
 
 # Run the application.
 CMD node index.js
