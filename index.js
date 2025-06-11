@@ -5,6 +5,8 @@ const kafkaRoutes = require('./routes/kafka');
 const kafkaController = require('./controllers/kafkaController');
 const { startConsumer } = require('./service/kafkaConsumer');
 const initdb = require('./service/initdb');
+const cors = require('cors');
+const logger = require('./middleware/logger');
 
 const app = express();
 
@@ -13,6 +15,8 @@ app.set('views', path.join(__dirname, 'views'));
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: false }));
+app.use(cors());
+app.use(logger);
 
 app.use('/', routes);
 app.use('/kafka', kafkaRoutes);

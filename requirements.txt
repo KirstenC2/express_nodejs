@@ -3,3 +3,4 @@ ejs
 kafkajs
 mysql2
 dotenv
+cors

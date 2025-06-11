@@ -23,6 +23,8 @@ express_nodejs/
 │   ├── homeController.js       # 首頁控制器
 │   ├── kafkaController.js      # Kafka 訊息控制器
 │   └── userController.js       # 使用者資料控制器
+├── middleware/
+│   ├── logger.js               # log
 ├── models/
 │   ├── homeModel.js            # 首頁資料模型（範例）
 │   └── userModel.js            # 使用者資料模型
@@ -43,6 +45,20 @@ express_nodejs/
 ├── README.md                   # 專案說明（中英）
 └── ... 其他檔案
 ```
+### 後端角色table
+| 架構元件             | 職責 / 功能                      | 生活化比喻          | 為什麼重要？                 |
+| ---------------- | ---------------------------- | -------------- | ---------------------- |
+| **Controller**   | 接收請求、回應結果                    | 櫃檯接待人員 / 接單人員  | 負責第一線與客戶互動             |
+| **Service**      | 處理商業邏輯、流程協調                  | 老闆 / 經理        | 決策核心，統籌所有流程            |
+| **Repository**   | 資料存取邏輯（DB 查詢/更新/刪除）          | 倉管 / 採購員       | 隱藏底層資料操作細節，便於切換資料庫     |
+| **Middleware**   | 請求前的處理（認證、日誌、CORS）           | 門口保全 / 安檢站     | 攔截每個請求，做驗證或處理          |
+| **DTO**          | 請求與回應的資料格式規範                 | 點菜單 / 訂單表格     | 確保資料結構正確、統一            |
+| **Entity/Model** | 定義資料庫中的資料結構                  | 倉庫的貨物標籤 / 建模圖紙 | 用來對應資料庫欄位與邏輯結構         |
+| **Guard**        | 保護路由、決定可不可以進入特定功能            | 門禁卡感應器 / 員工識別器 | 控制誰有權進入某些資源或功能         |
+| **Interceptor**  | 攔截 request 或 response 做轉換/統一 | 廚房總管：統一出餐樣式    | 可統一 API 回傳格式或加上統計計時等功能 |
+| **Pipe**         | 資料驗證與轉換（輸入端）                 | 點餐單格式檢查員       | 確保客人點餐格式沒錯，例如金額為數字等    |
+| **Config**       | 環境變數與設定檔                     | 餐廳的手冊 / 作業規範書  | 把敏感與環境相關設定抽出來管理        |
+
 
 ### Repository 資料存儲層
 
@@ -88,6 +104,53 @@ beanSource.getFreshBeans()
 老闆只需要跟採購經理說，我要新豆子，那採購經理就會自己處理後面的事情，不需要老闆操心。
 
 
+### Middleware 中間件
+
+Middleware 是在「收到請求（Request）」到「送出回應（Response）」的過程中，可以攔截、修改、驗證、記錄請求的中間處理器。
+
+```
+你（Request）→ 安檢站（Middleware）→ 登機口（Controller）→ 出發（Response）
+```
+
+
+
+### Repository Layer
+
+- A design layer between Controller and Model
+- Further separates operations between Controller and Model
+
+#### Analogy: Buying a House
+
+| System Component | Analogy Role         | Description                                 |
+|------------------|---------------------|---------------------------------------------|
+| Controller       | Customer Manager    | Receives customer request: "I want a house!"|
+| Service          | Real Estate Agent   | Analyzes needs: "What's your budget?"       |
+| Repository       | Land Office/Clerk   | Handles property lookup, transfer, etc.      |
+| Database         | Land Registry       | Where property data is actually stored       |
+
+##### Buying Process (System Logic)
+1. You tell the real estate front desk your needs (API request to Controller)
+2. The staff records your needs (Controller gets req.body)
+3. The agent analyzes your budget and preferences (Service handles logic)
+4. The agent asks a clerk to check the land registry (Repository queries DB)
+5. The agent recommends a house to you (returns response)
+
+#### Why use a Repository?
+You might wonder, why can't the agent (Service) just check the land registry (DB) directly?
+
+1. Violates Single Responsibility Principle
+   - Service should focus on business logic, not DB operations. Service only checks if things are reasonable.
+   - Repository doesn't handle logic; it just stores what Service gives it.
+2. Testing becomes more complex
+   - If one person does everything, testing is harder. Separation allows easier, focused testing.
+3. Easier to change data sources
+   - For example, if the service (shop owner) wants to switch from buying beans at the market (db) to buying online, without a purchasing manager (repository), the owner has to do everything. With a repository, the owner just asks for beans, and the manager handles the rest.
+
+```
+beanSource.getFreshBeans()
+```
+The owner just tells the purchasing manager to get fresh beans, and the manager handles the details.
+
 ## 快速開始
 1. 複製 `.env` 範例並設定資料庫資訊
 2. `docker-compose up` 啟動所有服務
@@ -126,6 +189,8 @@ express_nodejs/
 │   ├── homeController.js       # Home controller
 │   ├── kafkaController.js      # Kafka controller
 │   └── userController.js       # User controller
+├── middleware/
+│   ├── logger.js               # log
 ├── models/
 │   ├── homeModel.js            # Home model (example)
 │   └── userModel.js            # User model
