@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const routes = require('./routes');
 const kafkaRoutes = require('./routes/kafka');
+const { startConsumer } = require('./service/kafkaConsumer');
 
 const app = express();
 
@@ -13,6 +14,8 @@ app.use(express.urlencoded({ extended: false }));
 
 app.use('/', routes);
 app.use('/kafka', kafkaRoutes);
+
+startConsumer();
 
 const PORT = process.env.PORT || 8081;
 app.listen(PORT, () => {
