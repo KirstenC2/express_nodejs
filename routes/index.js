@@ -7,6 +7,9 @@ router.get('/', homeController.index);
 router.get('/users/ui', userController.usersUI);
 router.post('/users/ui/add', userController.addUser);
 router.post('/users/ui/delete', userController.deleteUser);
+router.get('/users/register', (req, res) => {
+  res.render('register');
+});
 
 
 module.exports = router;

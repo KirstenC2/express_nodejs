@@ -6,7 +6,8 @@ exports.getAllUsers = async () => {
 };
 
 exports.addUser = async (name, email) => {
-  await db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
+  const [result] = await db.query('INSERT INTO users (name, email) VALUES (?, ?)', [name, email]);
+  return result.insertId; // return the new user's id
 };
 
 exports.deleteUser = async (id) => {

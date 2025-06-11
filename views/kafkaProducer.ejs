@@ -4,28 +4,62 @@
   <title><%= title %></title>
 </head>
 <body>
-  <nav>
-    <a href="/">Home</a>
-  </nav>
-  <h1>Kafka Message Sender</h1>
-  <% if (status) { %>
-    <p><%= status %></p>
-  <% } %>
-  <form method="POST" action="/kafka/send">
-    <input name="topic" placeholder="Topic" required />
-    <input name="message" placeholder="Message" required />
-    <button type="submit">Send</button>
-  </form>
-  <hr />
-  <h2>Consumed Messages</h2>
-  <ul>
-    <% if (messages && messages.length) { %>
-      <% messages.forEach(function(msg) { %>
-        <li><%= msg %></li>
-      <% }) %>
-    <% } else { %>
-      <li>No messages consumed yet.</li>
+  <div class="container">
+    <nav>
+      <a href="/">Home</a>
+    </nav>
+    <h1>Kafka Message Sender</h1>
+    <% if (status) { %>
+      <p class="status"><%= status %></p>
     <% } %>
-  </ul>
+    <form method="POST" action="/kafka/send">
+      <label><strong>Topic</strong>:
+        <select name="topic" required>
+          <option value="registration">registration</option>
+          <option value="transactions">transactions</option>
+          <option value="other">other</option>
+        </select>
+      </label>
+      <fieldset style="margin-bottom:10px;">
+        <legend>User Transaction (for topic: transactions)</legend>
+        <input name="userId" placeholder="User ID" type="number" min="1" />
+        <input name="type" placeholder="Type (e.g. deposit)" />
+        <input name="amount" placeholder="Amount" type="number" step="0.01" />
+        <input name="description" placeholder="Description" />
+      </fieldset>
+      <fieldset style="margin-bottom:10px;">
+        <legend>User Registration (for topic: registration)</legend>
+        <input name="name" placeholder="Name" />
+        <input name="email" placeholder="Email" />
+      </fieldset>
+      <input name="message" placeholder="Raw Message (for topic: other)" />
+      <button type="submit">Send</button>
+    </form>
+    <hr />
+    <h2>Consumed Registration Messages</h2>
+    <ul>
+      <% if (messages && messages.length) { %>
+        <% messages.filter(m => {
+          try { return JSON.parse(m).name && JSON.parse(m).email; } catch { return false; }
+        }).forEach(function(msg) { %>
+          <li><%= msg %></li>
+        <% }) %>
+      <% } else { %>
+        <li>No registration messages consumed yet.</li>
+      <% } %>
+    </ul>
+    <h2>Consumed Transaction Messages</h2>
+    <ul>
+      <% if (messages && messages.length) { %>
+        <% messages.filter(m => {
+          try { const d = JSON.parse(m); return d.userId && d.type && d.amount; } catch { return false; }
+        }).forEach(function(msg) { %>
+          <li><%= msg %></li>
+        <% }) %>
+      <% } else { %>
+        <li>No transaction messages consumed yet.</li>
+      <% } %>
+    </ul>
+  </div>
 </body>
 </html>
