@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <title>Kafka 在本專案的用途</title>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="/">首頁</a>
+      <a href="/kafka/producer">Kafka Producer UI</a>
+      <a href="/users/ui">用戶資料 UI</a>
+    </nav>
+    <h1>本專案中 Kafka 的用途是什麼？</h1>
+    <p>
+      <strong>Kafka</strong> 是一個分散式事件串流平台。在本專案中，Kafka 被用來作為訊息佇列，將「接收使用者操作（如註冊、交易）」與「寫入資料庫」的流程解耦。
+    </p>
+    <ul>
+      <li>
+        <strong>Producer：</strong> 當你在 UI 上送出註冊或交易時，資料會先送到 Kafka topic，而不是直接寫入資料庫。
+      </li>
+      <li>
+        <strong>Consumer：</strong> 背景服務（Kafka consumer）會監聽這些 topic，收到新訊息時再將資料寫入 MySQL 資料庫。
+      </li>
+      <li>
+        <strong>好處：</strong> 這種設計提升了系統的擴展性、可靠性，並支援非同步處理。即使資料庫暫時不可用，訊息也不會遺失，會先存在 Kafka，等可處理時再寫入。
+      </li>
+      <li>
+        <strong>主題：</strong> 本專案使用 <code>registration</code>、<code>transactions</code> 等 topic 來區分不同型態的訊息。
+      </li>
+    </ul>
+    <p>
+      <em>Kafka 讓 UI/API 與資料庫層分離，讓系統更穩健、彈性。</em>
+    </p>
+    <section style="margin-top:32px;">
+      <h2>使用 Kafka 在此專案的好處</h2>
+      <ul>
+        <li><strong>解耦合：</strong> UI/API 不直接寫資料庫，先送到 Kafka，後端消費後再寫入 DB，讓系統更彈性。</li>
+        <li><strong>高可靠：</strong> 即使資料庫暫時掛掉，訊息不會遺失，Kafka 會保存直到可處理。</li>
+        <li><strong>可擴展：</strong> 多個 consumer 可同時處理訊息，方便橫向擴充。</li>
+        <li><strong>非同步處理：</strong> 前端送出後不用等資料庫完成，提升用戶體驗。</li>
+        <li><strong>彈性整合：</strong> 未來可輕鬆串接更多服務（如大數據分析、通知等）。</li>
+      </ul>
+      <p style="color:#888;font-size:0.95em;">Kafka 讓資料流動更穩健、彈性，適合現代微服務與高併發場景。</p>
+    </section>
+  </div>
+</body>
+</html>

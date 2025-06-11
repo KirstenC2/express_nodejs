@@ -4,3 +4,4 @@ kafkajs
 mysql2
 dotenv
 cors
+socket.io

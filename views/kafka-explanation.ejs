@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <title>Kafka Usage Explanation</title>
+</head>
+<body>
+  <div class="container">
+    <nav>
+      <a href="/">Home</a>
+      <a href="/kafka/producer">Kafka Producer UI</a>
+      <a href="/users/ui">User DB UI</a>
+    </nav>
+    <h1>What is Kafka Used For in This Project?</h1>
+    <p>
+      <strong>Kafka</strong> is a distributed event streaming platform. In this project, Kafka is used as a message queue to decouple the process of receiving user actions (like registration or transactions) from the process of storing them in the database.
+    </p>
+    <ul>
+      <li>
+        <strong>Producer:</strong> When you submit a registration or transaction on the UI, the data is sent to a Kafka topic instead of directly writing to the database.
+      </li>
+      <li>
+        <strong>Consumer:</strong> A background service (Kafka consumer) listens to these topics. When a new message arrives, it processes the message and inserts the data into the MySQL database.
+      </li>
+      <li>
+        <strong>Benefits:</strong> This design improves scalability, reliability, and allows for asynchronous processing. Even if the database is temporarily unavailable, messages are not lost—they are stored in Kafka until they can be processed.
+      </li>
+      <li>
+        <strong>Topics:</strong> This project uses topics like <code>registration</code> and <code>transactions</code> to separate different types of messages.
+      </li>
+    </ul>
+    <p>
+      <em>Kafka helps make the system more robust and flexible by decoupling the UI/API from the database layer.</em>
+    </p>
+    <section style="margin-top:32px;">
+      <h2>Benefits of Using Kafka in This Project</h2>
+      <ul>
+        <li><strong>Decoupling:</strong> The UI/API does not write directly to the database. Data is sent to Kafka first, then processed and written to the DB by the backend, making the system more flexible.</li>
+        <li><strong>Reliability:</strong> If the database is temporarily unavailable, messages are not lost. Kafka stores them until they can be processed.</li>
+        <li><strong>Scalability:</strong> Multiple consumers can process messages in parallel, making it easy to scale horizontally.</li>
+        <li><strong>Asynchronous Processing:</strong> The frontend does not need to wait for the database to finish, improving user experience.</li>
+        <li><strong>Flexible Integration:</strong> It's easy to connect more services in the future (such as analytics, notifications, etc.).</li>
+      </ul>
+      <p style="color:#888;font-size:0.95em;">Kafka makes data flow more robust and flexible, suitable for modern microservices and high-concurrency scenarios.</p>
+    </section>
+  </div>
+</body>
+</html>
