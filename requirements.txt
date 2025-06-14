@@ -5,3 +5,5 @@ mysql2
 dotenv
 cors
 socket.io
+mocha
+chai

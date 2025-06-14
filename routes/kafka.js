@@ -13,9 +13,6 @@ router.post('/send', kafkaController.sendMessage);
 router.get('/kafka/explanation', (req, res) => {
   res.render('kafka-explanation');
 });
-router.get('/explanation-zh', (req, res) => {
-  res.render('kafka-explanation-zh');
-});
 
 
 module.exports = router;

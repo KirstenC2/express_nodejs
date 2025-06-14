@@ -2,6 +2,7 @@ const express = require('express');
 const path = require('path');
 const routes = require('./routes');
 const kafkaRoutes = require('./routes/kafka');
+const transactionRoutes = require('./routes/transaction');
 const kafkaController = require('./controllers/kafkaController');
 const { startConsumer } = require('./service/kafkaConsumer');
 const initdb = require('./service/initdb');
@@ -20,6 +21,7 @@ app.use(logger);
 
 app.use('/', routes);
 app.use('/kafka', kafkaRoutes);
+app.use('/transactions', transactionRoutes);
 
 startConsumer(async (msg) => {
   kafkaController.addConsumedMessage(msg);

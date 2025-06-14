@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head><title>All Transactions</title></head>
+<body>
+  <div class="container">
+    <h1>Transactions</h1>
+    <nav>
+      <a href="/kafka/producer">Kafka Sender</a>
+      <a href="http://localhost:8080">Kafka Cluster UI</a>
+      <a href="/users/ui">User DB UI</a>
+      <a href="/transactions">Transactions</a>
+      <a href="/kafka/explanation-zh">Kafka 在本專案的用途</a>
+      <a href="/kafka/explanation">Kafka in this project</a>
+
+    </nav>
+  </div>
+  <h1>All Transactions</h1>
+  <ul>
+    <% if (userHistory && userHistory.length) { %>
+      <% userHistory.forEach(function(tx) { %>
+        <li>
+          User ID: <%= tx.user_id %> | <%= tx.type %> - <%= tx.amount %> | <%= tx.description %>
+        </li>
+      <% }) %>
+    <% } else { %>
+      <li>No transaction history found.</li>
+    <% } %>
+  </ul>
+</body>
+</html>

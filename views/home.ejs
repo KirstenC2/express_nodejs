@@ -12,20 +12,10 @@
       <a href="/kafka/producer">Kafka Sender</a>
       <a href="http://localhost:8080">Kafka Cluster UI</a>
       <a href="/users/ui">User DB UI</a>
+      <a href="/transactions">Transactions</a>
       <a href="/kafka/explanation-zh">Kafka 在本專案的用途</a>
       <a href="/kafka/explanation">Kafka in this project</a>
     </nav>
-    <section style="margin-top:32px;">
-      <h2>使用 Kafka 在此專案的好處</h2>
-      <ul>
-        <li><strong>解耦合：</strong> UI/API 不直接寫資料庫，先送到 Kafka，後端消費後再寫入 DB，讓系統更彈性。</li>
-        <li><strong>高可靠：</strong> 即使資料庫暫時掛掉，訊息不會遺失，Kafka 會保存直到可處理。</li>
-        <li><strong>可擴展：</strong> 多個 consumer 可同時處理訊息，方便橫向擴充。</li>
-        <li><strong>非同步處理：</strong> 前端送出後不用等資料庫完成，提升用戶體驗。</li>
-        <li><strong>彈性整合：</strong> 未來可輕鬆串接更多服務（如大數據分析、通知等）。</li>
-      </ul>
-      <p style="color:#888;font-size:0.95em;">Kafka 讓資料流動更穩健、彈性，適合現代微服務與高併發場景。</p>
-    </section>
   </div>
 </body>
 </html>
